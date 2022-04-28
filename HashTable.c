@@ -119,7 +119,7 @@ void dictInsert(Dict* d, const char* key, void* data) {
 
     
     double alpha = ((double) (d->nbKeys))/((double) (d->size));
-    if(alpha > 0.7)
+    /*if(alpha > 0.7)
     {
         d->nbKeys = 0;
 
@@ -140,5 +140,40 @@ void dictInsert(Dict* d, const char* key, void* data) {
             }
         }
 
+    }*/
+    if(alpha > 0.7)
+    {
+        Dict* newDict = dictCreateEmpty();
+        int length = d->size;
+        newDict->size = 2*d->size;
+        newDict->array = calloc()
     }
+    /*if(alpha >= 0.7)
+    {
+        Node* n;
+        Node** array = calloc(2 * d->size, sizeof(Node*));
+        for(int i = 0; i < d->size; i++)
+        {
+            n = d->array[i];
+            while(n != NULL)
+            {
+                int index = hash(n->key)%(2 * d->size);
+                Node* iternode = array[index];
+                if(index)
+                {
+                    while(iternode->next)
+                    {
+                        iternode = iternode->next;
+                        iternode->next = n;
+                    }
+                }
+                else
+                    array[index] = n;
+            }
+            //fprintf(stderr, "Je print key : %s, et data : %s \n", n->key, n->data);
+            Node* tmp = n->next;
+            n->next = NULL;
+            n = tmp;
+        }
+    }*/
 }

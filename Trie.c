@@ -118,6 +118,7 @@ void* dictSearchLongest(Dict* d, const char* letters)
 
 void dictInsert(Dict* d, const char* key, void* data) {
     int nblettre = strlen(key);
+    
     int lettre;
     Cellule* noeud = d->root;
 
@@ -126,21 +127,19 @@ void dictInsert(Dict* d, const char* key, void* data) {
         lettre = key[i] - 97; 
         noeud = noeud->fils[lettre];
         
-        if(!noeud)
+        if(noeud == NULL)
         {
             noeud = malloc(sizeof(Cellule));
-            noeud->fils = calloc(26, sizeof(Cellule));
+            noeud->fils = calloc(26, sizeof(Cellule*));
             for(int i = 0; i < 26; i++)
             {
                 noeud->fils[i] = NULL;
             }
-            if(i == nblettre - 1)
-                noeud->data = data;
-            else
-                noeud->data = NULL; 
+
+            noeud->data = NULL;
         }
     }
-    fprintf(stderr, "Je print la data dans dict insert : %s \n", data);
+    //fprintf(stderr, "Je print la data dans dict insert : %s \n", data);
     noeud->data = data;
     d->nbkeys ++;
 }

@@ -63,10 +63,10 @@ ScrabbleDict* scrabbleCreateDict(List* words)
     while(tmp != llTail(words)) 
     {
         strcpy(data, llData(tmp));
-        //data = copydata(llData(tmp));
         key = ascendingOrderString(llData(tmp));
         dictInsert(dict->d, key, data);
         tmp = llNext(tmp);
+        //data = copydata(llData(tmp));
         //fprintf(stderr, "Je print la data disct search %s\n", dictSearch(dict->d, key));
         //fprintf(stderr, "Je print data %s et key %s \n \n",data,key);
     }

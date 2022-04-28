@@ -8,7 +8,7 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/sb_trie",
+            "program": "${workspaceFolder}/sb_hash",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
