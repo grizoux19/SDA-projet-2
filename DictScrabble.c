@@ -7,28 +7,11 @@
 #include "LinkedList.h"
 #include "Scrabble.h"
 
-
-struct ScrabbleDict_t {
-    Dict* dico;
-};
-
-/*struct List_t {
-    Node* head;
-    Node* tail;
-    size_t length;
-};
-
-struct Node_t {
-    char* key;
-    void* data;
-    struct Node_t* next;
-};*/
-
-char* ascendingOrderString(char* words) {
+char* ascendingOrderString(char* words) 
+{
   int i, j;
   char temp;
   char* input = words;
-  //fprintf(stderr, "Je print le char avant, %s \n",input);
 
   int stringLength = strlen(input);
 
@@ -41,99 +24,74 @@ char* ascendingOrderString(char* words) {
       }
     }
   }
-  //fprintf(stderr, "Je print le char après, %s \n",input);
   return input;
 }
 
-static void sortwordd(char* letters)
+
+struct ScrabbleDict_t {
+    Dict* d;
+};
+
+char* copydata(char* input)
 {
-    //fprintf(stderr,"Je print la chaine de caractère avant :%s \n", letters);
-    int length = strlen(letters);
-    for(int i = 1; i < length; i++)
+    int length = strlen(input);
+    char* output;
+    /*char output[length + 1];
+    /*for(int i = 0; i < length; i++) 
     {
-        int j = i - 1;
-        while(j >= 0 && letters[j] > letters[i])
-        {
-            letters[j + 1] = letters[j];
-            j = j - 1;
-        }
-        letters[j + 1] = letters[i];
+        output[i] = input[i];
     }
-    //fprintf(stderr,"Je print la chaine de caractère après,%s \n", letters);
+    output[length] = '\0';*/
+    output = input;
+    return output;
 }
 
-ScrabbleDict* scrabbleCreateDict(List* words) {
+ScrabbleDict* scrabbleCreateDict(List* words) 
+{
     ScrabbleDict* dict = malloc(sizeof(ScrabbleDict));
-    if(dict == NULL)    
+    if(dict == NULL)
         return 0;
-    
-    dict->dico = dictCreateEmpty();
 
-    //dict->dico->size = llLength(words);
-    //fprintf(stderr, "Je passe avant malloc");
-    //fprintf(stderr, "Je passe après malloc");
+    dict->d = dictCreateEmpty();
+    if(dict->d == NULL)
+        return 0;
 
-    //fprintf(stderr,"Je print la length du dico, %d \n", dict->dico->size);
-    //fprintf(stderr,"Je print la longueur du dico dans sort word,%d \n", dictNbKeys(dict));
-    Node* tmp = llCreateEmpty();
+    Node* tmp;
     tmp = llHead(words);
-    //tmp = words->head;
+    char* data;
     char* key;
-    char* test;
-
-    strcpy(key, llData(tmp));
-
-    /*Node* test = llCreateEmpty();
-    test = llCreateNode(llData(words->head));*/
-
     while(tmp != llTail(words)) 
     {
-        //fprintf(stderr, "Je passe dans le boucle \n");
-        //fprintf(stderr,"Je print ici %s \n", tmp->data)
-
-        /*fprintf(stderr,"Je print la key : %s \n", key);
-        fprintf(stderr,"Je print le data :%s \n", data);*/
-
-        //fprintf(stderr,"Je passe ici 1 \n");
-
-        strcpy(key, llData(tmp));
-        ascendingOrderString(llData(tmp));
-        //fprintf(stderr,"Je passe après la fonction de tri");
-        test = llData(tmp);
-
-        //fprintf(stderr,"Je print la key : %s \n", key);
-        //fprintf(stderr,"Je print le data :%s \n", test);
-        
-        //fprintf(stderr,"Je print le taille du dico dans le main, %d \n", dict->size);
-        dictInsert(dict->dico, test, key);
-        //llNext(tmp);
-        //fprintf(stderr,"Je passe avant4\n");
+        strcpy(data, llData(tmp));
+        //data = copydata(llData(tmp));
+        key = ascendingOrderString(llData(tmp));
+        dictInsert(dict->d, key, data);
         tmp = llNext(tmp);
-        //printf("Je passe ici 4\n");
+        //fprintf(stderr, "Je print la data disct search %s\n", dictSearch(dict->d, key));
+        //fprintf(stderr, "Je print data %s et key %s \n \n",data,key);
     }
-    return dict;
+    return dict;    
 }
 
 void scrabbleFreeDict(ScrabbleDict* sd) {
-    dictFree(sd->dico);
-    free(sd);
+    // à compléter
 }
 
 char* scrabbleFindLongestWord(ScrabbleDict* sd, const char* letters) {
     //On va commencer par trier le mot
-    fprintf(stderr,"Je print le char, %s \n", letters);
+    //fprintf(stderr,"Je print le char, %s \n", letters);
     char* word = letters;
     char* result;
     ascendingOrderString(word);
-    fprintf(stderr,"Je print le char après le tric, %s \n", word);
+    //fprintf(stderr,"Je print le char après le tric, %s \n", word);
 
     int stringLength = strlen(word);
-    fprintf(stderr,"Je print la longueuer du char, %d \n", stringLength);
+    //fprintf(stderr,"Je print la longueuer du char, %d \n", stringLength);
     for(int i = stringLength - 1; i > 0; i--)
     {
-        if(dictSearch(sd->dico, word) != NULL)
+        if(dictSearch(sd->d, word) != NULL)
         {
-            result = dictSearch(sd->dico, word);
+            result = dictSearch(sd->d, word);
             //fprintf(stderr,"Je print le char, %s", result);
             return result;
         }
@@ -141,3 +99,4 @@ char* scrabbleFindLongestWord(ScrabbleDict* sd, const char* letters) {
             word[i] = '\0';
     }   
 }
+

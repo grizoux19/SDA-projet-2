@@ -49,7 +49,7 @@ Dict* dictCreateEmpty() {
 }
 
 size_t dictNbKeys(Dict* d) {
-    return d->size;
+    return d->nbKeys;
 }
 
 void dictFree(Dict* d) {
@@ -72,14 +72,11 @@ void dictFree(Dict* d) {
 }
 
 static Node* dictGet(Dict* d, const char* key) {
-    //fprintf(stderr, "Je passe dans dictget \n");
-    
     Node* n = d->array[hash(key) % d->size];
 
-    //fprintf(stderr, "Je passe dans dictget \n ");
     while (n && strcmp(n->key, key) != 0)
         n = n->next;
-    //fprintf(stderr, "Je passe dans dictget dernière fois \n ");
+
     return n;
 }
 
@@ -97,13 +94,8 @@ void* dictSearch(Dict* d, const char* key) {
 }
 
 void dictInsert(Dict* d, const char* key, void* data) {
-    //fprintf(stderr, "Je print la size du dico dans dicoinsert, %d \n", d->size);
+    //fprintf(stderr, "Je print key : %s et je print data : %s \n", key, data);
     Node* n = dictGet(d, key);
-    double alpha = ((double) (d->nbKeys))/((double) (d->size));
-    if(alpha > 0.7) //On reash
-    {
-        Node** array = malloc(2*d->size * sizeof(Node*));
-    }
 
     if (n)
         n->data = data;
@@ -116,7 +108,37 @@ void dictInsert(Dict* d, const char* key, void* data) {
         n->next = d->array[i];
         d->array[i] = n;
         d->nbKeys++;
+    }
 
-    //fprintf(stderr, "Je fini de passer dans dictInsert \n");
+    /*Node** array = malloc(d->size * sizeof(Node*));
+        array = d->array;
+
+        d->array = calloc(2*d->size, sizeof(Node*));
+        int length = d->size;
+        d->size = 2*d->size;*/
+
+    
+    double alpha = ((double) (d->nbKeys))/((double) (d->size));
+    if(alpha > 0.7)
+    {
+        d->nbKeys = 0;
+
+        Dict* news = dictCreateEmpty();
+        int length = d->size;
+        news->size = 2*d->size;
+        news->array = calloc(2*d->size, sizeof(Node));
+
+
+        for(int i = 0; i < length; i++)
+        {
+            if(d->array[i] != 0)
+            {
+                Node* tmp = malloc(sizeof(Node*));
+                tmp = d->array[i];
+                //fprintf(stderr, "Je print key : %s, et data : %s \n", tmp->key, tmp->data);
+                dictInsert(news,tmp->key, tmp->data);
+            }
+        }
+
     }
 }
