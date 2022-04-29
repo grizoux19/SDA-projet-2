@@ -7,11 +7,10 @@
 #include "LinkedList.h"
 #include "Scrabble.h"
 
-char* ascendingOrderString(char* words) 
+char* ascendingOrderString(char* input) 
 {
   int i, j;
   char temp;
-  char* input = words;
 
   int stringLength = strlen(input);
 
@@ -51,16 +50,26 @@ ScrabbleDict* scrabbleCreateDict(List* words)
     ScrabbleDict* dict = malloc(sizeof(ScrabbleDict));
     if(dict == NULL)
         return 0;
-
+    
     dict->d = dictCreateEmpty();
     if(dict->d == NULL)
         return 0;
 
-    Node* tmp;
-    tmp = llHead(words);
-    char* data;
-    char* key;
-    while(tmp != llTail(words)) 
+    Node* tmp = llHead(words);
+    //tmp = llHead(words);
+    char* data = malloc(sizeof(char));
+    char* key = malloc(sizeof(char));
+    char* sortedword = malloc(sizeof(char));
+    
+    while(tmp)
+    {
+        const char* word = llData(tmp);
+        memmove(sortedword, word, strlen(word)*sizeof(char*));
+        ascendingOrderString(sortedword);
+        dictInsert(dict->d, sortedword, (void *)word);
+        tmp = llNext(tmp);
+    }
+    /*while(tmp != llTail(words)) 
     {
         strcpy(data, llData(tmp));
         key = ascendingOrderString(llData(tmp));
@@ -69,7 +78,7 @@ ScrabbleDict* scrabbleCreateDict(List* words)
         //data = copydata(llData(tmp));
         //fprintf(stderr, "Je print la data disct search %s\n", dictSearch(dict->d, key));
         //fprintf(stderr, "Je print data %s et key %s \n \n",data,key);
-    }
+    }*/
     return dict;    
 }
 

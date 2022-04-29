@@ -121,23 +121,23 @@ void dictInsert(Dict* d, const char* key, void* data) {
     
     int lettre;
     Cellule* noeud = d->root;
+    Cellule* next = NULL;
 
     for(int i = 0; i < nblettre; i++)
     {
         lettre = key[i] - 97; 
-        noeud = noeud->fils[lettre];
+        next = noeud->fils[lettre];
         
-        if(noeud == NULL)
+        if(next == NULL || noeud == 0)
         {
-            noeud = malloc(sizeof(Cellule));
-            noeud->fils = calloc(26, sizeof(Cellule*));
-            for(int i = 0; i < 26; i++)
-            {
-                noeud->fils[i] = NULL;
-            }
-
+            next = malloc(sizeof(Cellule));
+            next->fils = calloc(26, sizeof(Cellule*));
+            //d->root->fils[0] = noeud;
+            noeud->fils[lettre] = noeud;
             noeud->data = NULL;
         }
+        next = NULL;
+        noeud = noeud->fils[lettre];
     }
     //fprintf(stderr, "Je print la data dans dict insert : %s \n", data);
     noeud->data = data;
