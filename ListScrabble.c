@@ -10,9 +10,34 @@ struct ScrabbleDict_t {
     List* words;
 };
 
+static bool match(const char* letters, char* word)
+{
+    size_t nbLetters = strlen(letters);
+    size_t lengthWord = strlen(word);
 
-static bool match(const char* letters, char* word) {
-    // à améliorer
+    if (lengthWord > nbLetters)
+        return false;
+    
+    int tmp;
+    char* tab = calloc(26, sizeof(int));
+    for(size_t i = 0; i < nbLetters; i++)
+    {
+        tmp = letters[i] - 97;
+        tab[tmp]++;
+    }
+    for(size_t i = 0; i < lengthWord; i++)
+    {
+        tmp =  word[i] - 97;
+        if(tab[tmp] == 0)
+            return false;
+        else
+            tab[tmp]--;
+    }
+    free(tab);
+    return true;
+}
+
+/*static bool match(const char* letters, char* word) {
 
     size_t nbLetters = strlen(letters);
     size_t lengthWord = strlen(word);
@@ -37,7 +62,7 @@ static bool match(const char* letters, char* word) {
     }
 
     return true;
-}
+}*/
 
 
 ScrabbleDict* scrabbleCreateDict(List* words) {

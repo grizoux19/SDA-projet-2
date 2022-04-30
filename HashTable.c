@@ -39,7 +39,7 @@ Dict* dictCreateEmpty() {
 
     d->size = 1000;
     d->nbKeys = 0;
-    d->array = calloc(d->size, sizeof(Node));
+    d->array = calloc(d->size, sizeof(Node*));
     if (!d->array) {
         free(d);
         return NULL;
@@ -85,6 +85,7 @@ int dictContains(Dict* d, const char* key) {
 }
 
 void* dictSearch(Dict* d, const char* key) {
+    //fprintf(stderr, "Je print key : %s \n", key);
     Node* n = dictGet(d, key);
 
     if (n)
@@ -98,7 +99,10 @@ void dictInsert(Dict* d, const char* key, void* data) {
     Node* n = dictGet(d, key);
 
     if (n)
+    {
+        //fprintf(stderr, "Je passe ici \n");
         n->data = data;
+    }
     else {
         size_t i = hash(key) % d->size;
 
@@ -109,14 +113,6 @@ void dictInsert(Dict* d, const char* key, void* data) {
         d->array[i] = n;
         d->nbKeys++;
     }
-
-    /*Node** array = malloc(d->size * sizeof(Node*));
-        array = d->array;
-
-        d->array = calloc(2*d->size, sizeof(Node*));
-        int length = d->size;
-        d->size = 2*d->size;*/
-
     
     double alpha = ((double) (d->nbKeys))/((double) (d->size));
     /*if(alpha > 0.7)
@@ -158,7 +154,7 @@ void dictInsert(Dict* d, const char* key, void* data) {
     {
         d->nbKeys = 0; 
         Node** arraytmp = calloc(d->size, sizeof(Node*));
-        for(int i = 0; i < d->size; i++)
+        for(int i = 0; i < (int) d->size; i++)
         {
             arraytmp[i] = d->array[i];
         }
@@ -166,10 +162,11 @@ void dictInsert(Dict* d, const char* key, void* data) {
 
         int lenght = d->size;
         d->size = 2*d->size;
-        fprintf(stderr, "Je print la taille du tab %d \n", d->size);
+        //fprintf(stderr, "Je print la taille du tab %d \n", d->size); 
+
         for(int i = 0; i < lenght; i++)
         {
-            if(arraytmp[i] != 0) //|| arraytmp[i] != NULL)
+            if(arraytmp[i] != 0 || arraytmp[i] != NULL)
             {
                 tmp = arraytmp[i];
                 
@@ -181,6 +178,7 @@ void dictInsert(Dict* d, const char* key, void* data) {
                 dictInsert(d, keytmp, datatmp);
                 while(nexttmp != NULL)
                 {
+                    //fprintf(stderr, "Je passe ici \n");
                     datatmp = nexttmp->data;
                     keytmp = nexttmp->key;
                     dictInsert(d, keytmp, datatmp);
@@ -188,6 +186,7 @@ void dictInsert(Dict* d, const char* key, void* data) {
                 }
             }
         }
+        //fprintf(stderr, "Je print le nombre de keys %d \n", d->nbKeys);
         /*nexttmp = NULL;
         Node* nexttmpnext = NULL;
         for(int i = 0; i < lenght; i++)
@@ -228,7 +227,7 @@ void dictInsert(Dict* d, const char* key, void* data) {
                 fprintf(stderr, "Je print key : %s, et data : %s \n", node->key, node->data);
             }
         }
-    }/*
+    }*/
     /*if(alpha >= 0.7)
     {
         Node* n;
