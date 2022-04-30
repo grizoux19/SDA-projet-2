@@ -166,7 +166,7 @@ void dictInsert(Dict* d, const char* key, void* data) {
 
         for(int i = 0; i < lenght; i++)
         {
-            if(arraytmp[i] != 0 || arraytmp[i] != NULL)
+            if(arraytmp[i] != NULL)
             {
                 tmp = arraytmp[i];
                 

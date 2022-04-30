@@ -93,9 +93,11 @@ int main(int argc, char **argv) {
 
     // Search for the longest word(s)
 
+    //printf("Je print les lettres : %s \n", letters);
     if (letters) {
         start = clock();
         char* word = scrabbleFindLongestWord(sd, letters);
+        //printf("Je print le mot le plus long : %s \n", word);
 
         if (word)
             printf("Longest matching word is '%s' (length=%zu) (in %f seconds).\n", word, strlen(word), elapsed(start));

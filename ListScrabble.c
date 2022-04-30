@@ -19,7 +19,10 @@ static bool match(const char* letters, char* word)
         return false;
     
     int tmp;
-    char* tab = calloc(26, sizeof(int));
+    char tab[26];
+    for(int i = 0; i < 26; i++)
+        tab[i] = 0;
+
     for(size_t i = 0; i < nbLetters; i++)
     {
         tmp = letters[i] - 97;
@@ -27,13 +30,12 @@ static bool match(const char* letters, char* word)
     }
     for(size_t i = 0; i < lengthWord; i++)
     {
-        tmp =  word[i] - 97;
+        tmp = word[i] - 97;
         if(tab[tmp] == 0)
             return false;
         else
             tab[tmp]--;
-    }
-    free(tab);
+    }    
     return true;
 }
 

@@ -16,6 +16,7 @@ struct Dict_t {
 };
 
 static char* parcour(Cellule* noeud, char* letters, bool* tab, char* LonguestWord, int LonguestLenght);
+static void parcourFree(Cellule* noeud);
 
 Dict* dictCreateEmpty() {
     Dict* d = malloc(sizeof(Dict));
@@ -41,14 +42,8 @@ size_t dictNbKeys(Dict* d) {
 
 void dictFree(Dict* d) {
     Cellule* noeud = d->root;
-    for(int i=0; i<26; i++)
-    {
-        if(noeud->fils[i])
-        {
-            d->root = noeud->fils[i];
-            dictFree(d);
-        }
-    }
+    parcourFree(noeud);
+    free(d);
 }
 
 
@@ -71,16 +66,15 @@ int dictContains(Dict* d, const char* key) {
 }
 
 void* dictSearch(Dict* d, const char* key) {
-    int nblettre = strlen(key);
+    int nblettre = strlen(key );
     int lettre;
     Cellule* noeud = d->root;
-    Cellule* tmp = malloc(sizeof(Cellule));
     
-    for(int i = 0; i<nblettre; i++)
+    for(int i =0; i<nblettre; i++)
     {
         lettre = key[i] - 97; // donne le numéro de la case corespondant à la lettre
-        tmp = noeud->fils[lettre];
-        if(tmp == NULL) 
+        noeud = noeud->fils[lettre];
+        if(noeud == NULL) 
             return NULL;
     }
 
@@ -105,7 +99,7 @@ void* dictSearchLongest(Dict* d, const char* letters) {
     }
 
     LonguestWord = parcour(start, letters, tab, LonguestWord, LengthLonguest);
-    fprintf(stderr,"%s", LonguestWord);
+    fprintf(stderr,"%s\n", LonguestWord);
 
     return LonguestWord;
 }
@@ -114,9 +108,9 @@ void dictInsert(Dict* d, const char* key, void* data) {
     int nblettre = strlen(key);
     int lettre ;
     Cellule* noeud = d->root;
-    Cellule* tmp = malloc(26*sizeof(Cellule));
+    Cellule* tmp = malloc(26 * sizeof(Cellule));
     
-    for(int i = 0; i < nblettre; i++)
+    for( int i =0; i<nblettre; i++)
     {
         lettre = key[i] - 97 ; 
         tmp = noeud->fils[lettre];
@@ -128,14 +122,13 @@ void dictInsert(Dict* d, const char* key, void* data) {
             noeud->fils = calloc(26,sizeof(Cellule));
             noeud->data = NULL;
         }
-        
         else
             noeud = noeud->fils[lettre];
+        
     }
     noeud->data = data;
     d->nbkeys ++;
 }
-
 char* parcour(Cellule* noeud, char* letters, bool* tab, char* LonguestWord, int LonguestLenght)
 {
     int nbletters = strlen(letters);
@@ -144,22 +137,25 @@ char* parcour(Cellule* noeud, char* letters, bool* tab, char* LonguestWord, int 
     {
         if(noeud->fils[i] != 0)
         {
-            j =0;
-            while(tab[j] && i != letters[j] - 97 && j < nbletters)
+            for( j =0; j < nbletters; j++ )
             {
-                j++;
+                if(i == letters[j] - 97  && tab[j])
+                    break;
             }
 
             if (j == nbletters)
                 continue;
+            fprintf(stderr, "%p \n",noeud->fils[i]->data );
 
-            if(noeud->fils[i]->data)
+            if( noeud->fils[i]->data)
             {
                 int Lenght = strlen(noeud->fils[i]->data);
                 if(Lenght > LonguestLenght)
                 {
                     LonguestWord = noeud->fils[i]->data;
+                    fprintf(stderr,"%s\n",LonguestWord);
                     LonguestLenght = Lenght;
+                    fprintf(stderr,"%d\n",LonguestLenght);
                 }
             }
             tab[j] = false; // a vérifier
@@ -168,4 +164,17 @@ char* parcour(Cellule* noeud, char* letters, bool* tab, char* LonguestWord, int 
         }
     }
     return LonguestWord;
+}
+
+void parcourFree(Cellule* noeud)
+{
+    for(int i = 0; i<26; i++)
+    {
+        if(noeud->fils[i] != NULL)
+        {
+            parcourFree(noeud->fils[i]);
+            free(noeud->fils[i]);
+        }
+    }
+    free(noeud->fils);
 }

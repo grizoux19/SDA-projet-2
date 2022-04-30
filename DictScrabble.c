@@ -7,16 +7,20 @@
 #include "LinkedList.h"
 #include "Scrabble.h"
 
+char* getallcombinaison(ScrabbleDict*, char*, int, int);
+char* checkk(ScrabbleDict*, char*, char*, int, int, int, int, char*);
+char* ascendingOrderString(char*);
 char* ascendingOrderString(char* input) 
 {
-  int i, j;
   char temp;
-
   int stringLength = strlen(input);
 
-  for (i = 0; i < stringLength - 1; i++) {
-    for (j = i + 1; j < stringLength; j++) {
-      if (input[i] > input[j]) {
+  for (int i = 0; i < stringLength - 1; i++) 
+  {
+    for (int j = i + 1; j < stringLength; j++) 
+    {
+      if (input[i] > input[j]) 
+      {
         temp = input[i];
         input[i] = input[j];
         input[j] = temp;
@@ -31,20 +35,6 @@ struct ScrabbleDict_t {
     Dict* d;
 };
 
-char* copydata(char* input)
-{
-    int length = strlen(input);
-    char* output;
-    /*char output[length + 1];
-    /*for(int i = 0; i < length; i++) 
-    {
-        output[i] = input[i];
-    }
-    output[length] = '\0';*/
-    output = input;
-    return output;
-}
-
 ScrabbleDict* scrabbleCreateDict(List* words) 
 {
     ScrabbleDict* dict = malloc(sizeof(ScrabbleDict));
@@ -57,8 +47,8 @@ ScrabbleDict* scrabbleCreateDict(List* words)
 
     Node* tmp = llHead(words);
     //tmp = llHead(words);
-    char* data = malloc(sizeof(char));
-    char* key = malloc(sizeof(char));
+    //char* data = malloc(sizeof(char));
+    //char* key = malloc(sizeof(char));
     char* sortedword = malloc(sizeof(char));
     
     while(tmp)
@@ -103,61 +93,11 @@ void scrabbleFreeDict(ScrabbleDict* sd) {
     free(sd);
 }
 
-/*void* cut(char input[], char output[], int j)
-{
-    int length = strlen(input);
-    for(int i = 0; i < length; i++)
-    {
-        if(j != i)
-            output[i] = input[i];
-        else
-            continue;
-    }
-    fprintf(stderr, "Je prunt la cut %s\n", output);
-}*/
-
-/*void* cut(char input[], char output[], int j)
-{
-    int length = strlen(input);
-    int k = 0;// Pour le tableau input
-    int i = 0;//Pour le tableau ouput
-    for(; i < length; k++)
-    {
-        if(j != k)
-        {
-            memmove(output + i, input + k, sizeof(char));
-            i++;
-        }        
-    }
-    //fprintf(stderr, "Je prunt la cut %s\n", output);
-}
 
 
-char* search(Dict* sd, char* input, int length)
+char* checkk(ScrabbleDict* sd,char* word, char* tmp, int start, int end, int index, int r, char* result)
 {
-    Node* n;
-    //fprintf(stderr, "Je print input %s \n", input);
-    n = dictSearch(sd, input);
-    
-    if(n != NULL && llData(n))
-        return llData(n);
-    else //On doit fournir toutes le combinaisons possible du bail
-    {
-        for(int i = 0; i < length; i++)
-        {
-            if(length - 1 == 0)
-                return 0;
-            char tmp[length - 1];
-            cut(input, tmp, i);
-            dictSearch(sd, tmp);
-            search(sd, tmp, length - 1);
-        }
-    }
-}*/
-char* checkk(ScrabbleDict*, char*, char*, int, int, int, int);
-char* checkk(ScrabbleDict* sd,char* word, char* tmp, int start, int end, int index, int r)
-{
-    
+    //char* result = calloc(r, sizeof(char));
     if(index == r)
     {
         /*fprintf(stderr,"Je print le result : %s \n", tmp);
@@ -166,25 +106,28 @@ char* checkk(ScrabbleDict* sd,char* word, char* tmp, int start, int end, int ind
             return tmp;
         else
             return NULL;*/
-        fprintf(stderr,"Je print le result : %s \n", tmp);
-        return tmp;
+        //fprintf(stderr,"Je print le result : %s \n", tmp);
+        memmove(result, tmp, strlen(tmp) * sizeof(char*));
+        return result;
     }
     for(int i = start; i <= end && end - i + 1 >= r - index; i++)
     {
         tmp[index] = word[i];
-        checkk(sd, word, tmp, i + 1, end, index + 1, r);
+        checkk(sd, word, tmp, i + 1, end, index + 1, r, result);
     }
 
 }
 
 char* getallcombinaison(ScrabbleDict* sd, char* word, int length, int r)
 {
-    char* tmp = calloc(length, sizeof(char));
-    tmp[length] = '\0';
+    //char* tmp = calloc(length, sizeof(char*));
+    char tmp[r];
+    tmp[r] = '\0';
 
-    //char* result = malloc(sizeof(char));
-    char* result = malloc(sizeof(char));
-    result = checkk(sd, word, tmp, 0, length - 1, 0, r);
+    //char* result = malloc(sizeomake f(char));
+    //char* result = calloc(r, sizeof(char));
+    char* result;
+    checkk(sd, word, tmp, 0, length - 1, 0, r, result);
     //fprintf(stderr,"Je print le result : %s \n", result);
     return result;
 }
@@ -195,14 +138,16 @@ char* scrabbleFindLongestWord(ScrabbleDict* sd, const char* letters) { //ATTENTI
     
     char* word = malloc(sizeof(char));
     
-    char letter[6];
+    //fprintf(stderr,"Je print les lettres dans scrabble find longuest : %s \n",letters);
+
+    /*char letter[5];
     letter[0]= 'a';
     letter[1]= 'b';
     letter[2]= 'c';
     letter[3]= 'd';
     letter[4]= 'e';
-    letter[5]= '\0';
-    memmove(word, letter, strlen(letter)*sizeof(char));
+    letter[5]= '\0';*/
+    memmove(word, letters, strlen(letters)*sizeof(char));
     
     char* result = malloc(sizeof(char));
     ascendingOrderString(word);
@@ -217,7 +162,9 @@ char* scrabbleFindLongestWord(ScrabbleDict* sd, const char* letters) { //ATTENTI
         if(n != NULL)
             break;        
     }
-    fprintf(stderr,"Je print result %s", result);
+    //fprintf(stderr,"Je print result %s \n \n", result);
+    //fprintf(stderr," Je vais print la data de la clé : %s \n", dictSearch(sd->d, result));
+    //exit(0);
     return result;
 }
 
