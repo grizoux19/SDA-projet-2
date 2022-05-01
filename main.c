@@ -49,7 +49,7 @@ static double elapsed(clock_t start) {
 int main(int argc, char **argv) {
     // Arguments
     char* letters = NULL;
-    char* filename = "words_large.txt";
+    char* filename = "words_small.txt";
 
     if (argc > 1)
         letters = argv[1];

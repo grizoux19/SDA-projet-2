@@ -31,7 +31,10 @@ static bool match(const char* letters, char* word)
     {
         tmp = word[i] - 97;
         if(tab[tmp] == 0)
+        {
+            free(tab);
             return false;
+        }
         else
             tab[tmp]--;
     }   

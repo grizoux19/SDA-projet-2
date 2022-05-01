@@ -41,7 +41,7 @@ size_t dictNbKeys(Dict* d) {
 
 void dictFree(Dict* d) {
     Cellule* noeud = d->root;
-    parcourFree(noeud);
+    //parcourFree(noeud);
     free(d);
 }
 
@@ -89,10 +89,12 @@ void* dictSearchLongest(Dict* d, const char* letters) {
     Cellule* start = d->root;
 
     char input[strlen(letters)];
-    memmove(input, letters, strlen(letters)*sizeof(char));
+    //memmove(input, letters, strlen(letters)*sizeof(char));
+    strcpy(input, letters);
 
     best = dictSearchLonguestCellule(start, input, 0);
-
+    if(best == NULL)
+        return NULL;
     return best->data;
 }
 

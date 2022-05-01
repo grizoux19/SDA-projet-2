@@ -31,7 +31,8 @@ ScrabbleDict* scrabbleCreateDict(List* words) {
 
       data = llData(tmp);
       
-      memmove(key,data, strlen(data)*sizeof(char*));
+      //memmove(key,data, strlen(data)*sizeof(char*));
+      strcpy(key, data);
       sortWord(key);
       dictInsert(dict->dico, key, data);
       tmp = llNext(tmp);
@@ -50,7 +51,8 @@ char* scrabbleFindLongestWord(ScrabbleDict* sd, const char* letters) {
   
   int lengthletters = strlen(letters);
   char* sortedletters = calloc(lengthletters, sizeof(char));
-  memmove(sortedletters, letters, lengthletters * sizeof(char));
+  //memmove(sortedletters, letters, lengthletters * sizeof(char));
+  strcpy(sortedletters, letters);
 
   char* key = sortWord(sortedletters);
   char* LonguestWord = dictSearchLongest(sd->dico,key);

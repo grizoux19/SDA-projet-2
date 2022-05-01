@@ -50,13 +50,14 @@ ScrabbleDict* scrabbleCreateDict(List* words)
     while(tmp)
     {
         char* word = llData(tmp);
-        memmove(sortedword, word, strlen(word)*sizeof(char*));
+        //memmove(sortedword, word, strlen(word)*sizeof(char*));
+        strcpy(sortedword, word);
         sortWord(sortedword);
         dictInsert(dict->d, sortedword, word);
         tmp = llNext(tmp);
     }
-    free(tmp);
-    free(sortedword);    
+    //free(tmp);
+    //free(sortedword);    
     return dict;    
 }
 
@@ -109,7 +110,7 @@ char* scrabbleFindLongestWord(ScrabbleDict* sd, const char* letters)
             break;
         }
     }
-    free(sortedletters);
+    //free(sortedletters);
     return result;
 }
 
