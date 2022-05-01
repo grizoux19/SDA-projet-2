@@ -26,7 +26,7 @@ clean:
 	rm -f $(ALL) *.o
 
 run: $(ALL)
+	./sb_fast
+	./sb_trie
 	./sb_hash
 	./sb_list
-	./sb_trie
-	./sb_fast

@@ -10,7 +10,7 @@ extern char* strdup(const char*);  // strdup not declared in C99
 #include "Scrabble.h"
 
 const size_t BUFFER_SIZE = 256;
-const size_t EXPERIMENTS = 1000;
+const size_t EXPERIMENTS = 10;
 const size_t MIN_LENGTH = 5;
 const size_t MAX_LENGTH = 15;
 

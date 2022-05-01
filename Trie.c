@@ -7,7 +7,7 @@
 
 typedef struct Cellule_t {
     void* data;
-    struct Cellule_t** fils; //tableau qui va contenir les fils
+    struct Cellule_t** fils;
 } Cellule; 
 
 struct Dict_t {
@@ -17,6 +17,7 @@ struct Dict_t {
 
 static char* parcour(Cellule* noeud, char* letters, bool* tab, char* LonguestWord, int LonguestLenght);
 static void parcourFree(Cellule* noeud);
+static Cellule* dictSearchLonguestCellule(Cellule*, char*, int);
 
 Dict* dictCreateEmpty() {
     Dict* d = malloc(sizeof(Dict));
@@ -85,23 +86,15 @@ void* dictSearch(Dict* d, const char* key) {
 }
 
 void* dictSearchLongest(Dict* d, const char* letters) {
-    char* LonguestWord;
-    int LengthLonguest = 0;
     int nbletters= strlen(letters);
     
-    Cellule* start = malloc(sizeof(Cellule));
-    start = d->root;
+    Cellule* best = malloc(sizeof(Cellule));
+    Cellule* start = d->root;;
 
-    bool tab[nbletters];
-    for(int i=0; i<nbletters; i++)
-    {
-        tab[i]=true;
-    }
+    best = dictSearchLonguestCellule(start, letters, 0);
+    fprintf(stderr,"%s\n", best->data);
 
-    LonguestWord = parcour(start, letters, tab, LonguestWord, LengthLonguest);
-    fprintf(stderr,"%s\n", LonguestWord);
-
-    return LonguestWord;
+    return best->data;
 }
 
 void dictInsert(Dict* d, const char* key, void* data) {
@@ -129,6 +122,108 @@ void dictInsert(Dict* d, const char* key, void* data) {
     noeud->data = data;
     d->nbkeys ++;
 }
+
+/*static Node* dictSearchLongestRec(Node* n, char* s, size_t maxLength){
+
+    Node* best = NULL;
+
+    if(n->data != NULL && n->length > maxLength)
+    {
+        best = n;
+        maxLength = n->length;
+    }
+    
+    for(size_t i = 0; i < 26; i++)
+    {
+        char* tmp = s;
+        char* ref = s;
+        while(*s)
+        {
+
+            if(*s == (char)(i+'a') && n->array[i] != NULL)
+            {
+                *s = 1;
+                char* s_prime = malloc(strlen(tmp)*sizeof(char));
+
+                int j = 0;
+                while(*tmp){
+                    if(*tmp != 1){
+                        s_prime[j] = *tmp;
+                        j++;
+                    }
+                    tmp++;
+                }
+                tmp = ref;
+                s_prime[j] = '\0';
+
+                *s = (char)(i+97);
+                Node* node = dictSearchLongestRec(n->array[i], s_prime, maxLength);
+                free(s_prime);
+                
+                if(node != NULL && node->length > maxLength)
+                {
+                    maxLength = node->length;
+                    best = node;
+                }
+            }
+            s++;
+        }
+        s = tmp;
+    }
+
+    return best;
+}*/
+
+static Cellule* dictSearchLonguestCellule(Cellule* n, char* letters, int longuestlength)//, int actlength)
+{
+    Cellule* best = NULL;
+    if(n->data != NULL && strlen(n->data) > longuestlength)
+    {
+        best = n;
+        longuestlength = strlen(n->data);
+    }
+    for(int i = 0; i < 26; i++)
+    {
+        char* tmp = letters;
+        char* ref = letters;
+
+        while(*letters)
+        {
+            if(*letters == (char) (i + 'a') && n->fils[i] != NULL)
+            {
+                *letters = 1;
+                char* lettersbis = malloc(strlen(tmp)* sizeof(char));
+
+                int j = 0;
+                while(*tmp)
+                {
+                    if(*tmp != 1)
+                    {
+                        lettersbis[j] = *tmp;
+                        j++;
+                    }
+                    tmp++;
+                }
+                tmp = ref;
+                lettersbis[j] = '\0';
+
+                *letters = (char) (i + 97);
+                Cellule* noeud = dictSearchLonguestCellule(n->fils[i], lettersbis, longuestlength);
+                free(lettersbis);
+
+                if(noeud != NULL && strlen(noeud->data) > longuestlength)
+                {
+                    longuestlength = strlen(noeud->data);
+                    best = noeud;
+                }
+            }
+            letters++;
+        }
+        letters = tmp;
+    }
+    return best;
+}
+
 char* parcour(Cellule* noeud, char* letters, bool* tab, char* LonguestWord, int LonguestLenght)
 {
     int nbletters = strlen(letters);

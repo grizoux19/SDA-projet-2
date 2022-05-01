@@ -7,7 +7,7 @@
 #include "LinkedList.h"
 #include "Scrabble.h"
 
-static char* ascendingOrderString(char* words);
+static void* sortWord(char* words);
 
 struct ScrabbleDict_t {
     Dict * dico;
@@ -23,18 +23,20 @@ ScrabbleDict* scrabbleCreateDict(List* words) {
     
     Node* tmp;
     tmp = llHead(words);
-    char* sortedword = malloc(sizeof(char));
+    char* key = malloc(sizeof(char));
+    char* data = malloc(sizeof(char));
 
     
-    while(tmp)
+    while(tmp) 
     {
-        char* word = llData(tmp);
-        memmove(sortedword, word, strlen(word)*sizeof(char*));
-        sortedword = ascendingOrderString(sortedword);
-        //fprintf(stderr, "Je print la key : %s, la data : %s et la longueur du char %d  dans dict\n", sortedword, word, strlen(word));
-        dictInsert(dict->dico, sortedword, word);
-        //fprintf(stderr, "Je print la key : %s, la data : %s dans create \n", sortedword, dictSearch(dict->d, sortedword));
-        tmp = llNext(tmp);
+
+      data = llData(tmp);
+      
+      memmove(key,data, strlen(data)*sizeof(char*));
+      sortWord(key);
+      dictInsert(dict->dico, key, data);
+      //fprintf(stderr, "Je print la key : %s et la data associée : %s \n", key, dictSearch(dict->dico, key));
+      tmp = llNext(tmp);
     }
 
     free(tmp);
@@ -47,29 +49,41 @@ void scrabbleFreeDict(ScrabbleDict* sd) {
 }
 
 char* scrabbleFindLongestWord(ScrabbleDict* sd, const char* letters) {
-  char* key = ascendingOrderString(letters);
+    char letter[5];
+    letter[0]= 'a';
+    letter[1]= 'b';
+    letter[2]= 'c';
+    letter[3]= 'd';
+    letter[4]= '\0';
+
+  int lengthletters = strlen(letters);
+  char* sortedletters = calloc(lengthletters, sizeof(char));
+  memmove(sortedletters, letters, lengthletters * sizeof(char));
+
+  char* key = sortWord(sortedletters);
   char* LonguestWord = dictSearchLongest(sd->dico,key);
+  fprintf(stderr, "Je print le résultat : %s \n",LonguestWord);
   return LonguestWord;
     
 }
  
-char* ascendingOrderString(char* words) { // ca devrait pas etre word ?
-  int i, j;
+void* sortWord(char* input) 
+{
   char temp;
-  char* input = words;
-  //fprintf(stderr, "Je print le char avant, %s \n",input);
+  int lengthinput = strlen(input);
 
-  int stringLength = strlen(input);
-
-  for (i = 0; i < stringLength - 1; i++) {
-    for (j = i + 1; j < stringLength; j++) {
-      if (input[i] > input[j]) {
+  for (int i = 0; i < lengthinput; i++) 
+  {
+    for (int j = i + 1; j < lengthinput; j++) 
+    {
+      if (input[i] > input[j]) 
+      {
         temp = input[i];
         input[i] = input[j];
         input[j] = temp;
       }
     }
   }
-  //fprintf(stderr, "Je print le char après, %s \n",input);
   return input;
 }
+

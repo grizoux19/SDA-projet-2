@@ -121,7 +121,37 @@ void dictInsert(Dict* d, const char* key, void* data) {
     }
     
     double alpha = ((double) (d->nbKeys))/((double) (d->size));
-    
+    /*if(alpha > 0.7)
+    {
+        d->nbKeys = 0;
+
+        Dict* news = dictCreateEmpty();
+        int length = d->size;
+        news->size = 2*d->size;
+        news->array = calloc(2*d->size, sizeof(Node));
+        Node* tmp = malloc(sizeof(Node));
+
+
+        for(int i = 0; i < length; i++)
+        {
+            if(d->array[i] != 0)
+            {
+                tmp = d->array[i];
+                //fprintf(stderr, "Je print key : %s, et data : %s \n", tmp->key, tmp->data);
+                fprintf(stderr, "je rpint i : %d \n");
+                dictInsert(news,tmp->key, tmp->data);
+                
+            }
+        }
+        for(int i = 0; i < 2 * d->size; i++)
+        {
+            d->array[i] = news->array[i];
+            fprintf(stderr, "Je passe ici");
+        }
+
+        dictFree(news);
+
+    }*/
     Node* tmp;
     char* datatmp;
     char* keytmp;
@@ -162,10 +192,74 @@ void dictInsert(Dict* d, const char* key, void* data) {
                 }
             }
         }
-        free(arraytmp);
-        free(tmp);
-        free(datatmp);
-        free(keytmp);
-        free(nexttmp);
+        //fprintf(stderr, "Je print le nombre de keys %d \n", d->nbKeys);
+        /*nexttmp = NULL;
+        Node* nexttmpnext = NULL;
+        for(int i = 0; i < lenght; i++)
+        {
+            if(arraytmp[i] != NULL)
+            {
+                nexttmp = arraytmp[i];
+                free(arraytmp[i]);
+                while(nexttmp != NULL)
+                {
+                    nexttmpnext = nexttmp->next;
+                    free(nexttmp);
+                }
+
+            }
+        }*/
+        //free(arraytmp);
     }
+    /*if(alpha > 0.7)
+    {
+        d->nbKeys = 0;
+        Dict* newDict = dictCreateEmpty();
+        newDict->array = calloc(d->size, sizeof(Node));
+
+        Node* node;
+        char* key;
+        char* data;
+
+        for(int i = 0; i < d->size; i++)
+        {
+            node = d->array[i];
+            fprintf(stderr, "Je print i %d \n", i);
+            if(node != NULL)
+            {
+                key = node->key;
+                data = node->data;
+                dictInsert(newDict, key, data);
+                fprintf(stderr, "Je print key : %s, et data : %s \n", node->key, node->data);
+            }
+        }
+    }*/
+    /*if(alpha >= 0.7)
+    {
+        Node* n;
+        Node** array = calloc(2 * d->size, sizeof(Node*));
+        for(int i = 0; i < d->size; i++)
+        {
+            n = d->array[i];
+            while(n != NULL)
+            {
+                int index = hash(n->key)%(2 * d->size);
+                Node* iternode = array[index];
+                if(index)
+                {
+                    while(iternode->next)
+                    {
+                        iternode = iternode->next;
+                        iternode->next = n;
+                    }
+                }
+                else
+                    array[index] = n;
+            }
+            //fprintf(stderr, "Je print key : %s, et data : %s \n", n->key, n->data);
+            Node* tmp = n->next;
+            n->next = NULL;
+            n = tmp;
+        }
+    }*/
 }
