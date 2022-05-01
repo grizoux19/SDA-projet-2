@@ -14,7 +14,6 @@ struct Dict_t {
     size_t nbkeys;
 };
 
-static void parcourFree(Cellule* noeud);
 static Cellule* dictSearchLonguestCellule(Cellule*, char*, size_t);
 
 Dict* dictCreateEmpty() {
@@ -40,8 +39,6 @@ size_t dictNbKeys(Dict* d) {
 }
 
 void dictFree(Dict* d) {
-    Cellule* noeud = d->root;
-    //parcourFree(noeud);
     free(d);
 }
 
@@ -89,7 +86,6 @@ void* dictSearchLongest(Dict* d, const char* letters) {
     Cellule* start = d->root;
 
     char input[strlen(letters)];
-    //memmove(input, letters, strlen(letters)*sizeof(char));
     strcpy(input, letters);
 
     best = dictSearchLonguestCellule(start, input, 0);
@@ -104,7 +100,7 @@ void dictInsert(Dict* d, const char* key, void* data) {
     Cellule* noeud = d->root;
     Cellule* tmp = malloc(26 * sizeof(Cellule));
     
-    for( int i =0; i<nblettre; i++)
+    for(int i = 0; i<nblettre; i++)
     {
         lettre = key[i] - 97 ; 
         tmp = noeud->fils[lettre];
@@ -173,16 +169,4 @@ static Cellule* dictSearchLonguestCellule(Cellule* n, char* letters, size_t long
         letters = tmp;
     }
     return longuestword;
-}
-void parcourFree(Cellule* noeud)
-{
-    for(int i = 0; i<26; i++)
-    {
-        if(noeud->fils[i] != NULL)
-        {
-            parcourFree(noeud->fils[i]);
-            free(noeud->fils[i]);
-        }
-    }
-    free(noeud->fils);
 }

@@ -87,22 +87,16 @@ void* dictSearch(Dict* d, const char* key) {
     Node* n = dictGet(d, key);
 
     if (n)
-    {
         return n->data;
-    }
     else
-    {
         return NULL;
-    }
 }
 
 void dictInsert(Dict* d, const char* key, void* data) {
     Node* n = dictGet(d, key);
 
     if (n)
-    {
         n->data = data;
-    }
     else {
         size_t i = hash(key) % d->size;
 

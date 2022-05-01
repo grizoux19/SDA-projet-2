@@ -28,16 +28,12 @@ ScrabbleDict* scrabbleCreateDict(List* words) {
     
     while(tmp) 
     {
-
       data = llData(tmp);
-      
-      //memmove(key,data, strlen(data)*sizeof(char*));
       strcpy(key, data);
       sortWord(key);
       dictInsert(dict->dico, key, data);
       tmp = llNext(tmp);
     }
-
     free(tmp);
     return dict;
 }
@@ -51,7 +47,6 @@ char* scrabbleFindLongestWord(ScrabbleDict* sd, const char* letters) {
   
   int lengthletters = strlen(letters);
   char* sortedletters = calloc(lengthletters, sizeof(char));
-  //memmove(sortedletters, letters, lengthletters * sizeof(char));
   strcpy(sortedletters, letters);
 
   char* key = sortWord(sortedletters);
