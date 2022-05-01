@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "Dict.h"
 #include "LinkedList.h"
@@ -34,6 +35,7 @@ ScrabbleDict* scrabbleCreateDict(List* words) {
       memmove(key,data, strlen(data)*sizeof(char*));
       sortWord(key);
       dictInsert(dict->dico, key, data);
+      //fprintf(stderr, "Je print la key : %s et la data associée : %s \n", key, dictSearch(dict->dico, key));
       tmp = llNext(tmp);
     }
 
@@ -47,15 +49,22 @@ void scrabbleFreeDict(ScrabbleDict* sd) {
 }
 
 char* scrabbleFindLongestWord(ScrabbleDict* sd, const char* letters) {
-  
+    char letter[5];
+    letter[0]= 'a';
+    letter[1]= 'b';
+    letter[2]= 'c';
+    letter[3]= 'd';
+    letter[4]= '\0';
+
   int lengthletters = strlen(letters);
   char* sortedletters = calloc(lengthletters, sizeof(char));
   memmove(sortedletters, letters, lengthletters * sizeof(char));
 
   char* key = sortWord(sortedletters);
   char* LonguestWord = dictSearchLongest(sd->dico,key);
-  
+  //fprintf(stderr, "Je print le résultat : %s \n",LonguestWord);
   return LonguestWord;
+    
 }
  
 void* sortWord(char* input) 

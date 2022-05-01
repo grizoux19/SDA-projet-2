@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "Dict.h"
 #include "LinkedList.h"
@@ -52,7 +53,9 @@ ScrabbleDict* scrabbleCreateDict(List* words)
         char* word = llData(tmp);
         memmove(sortedword, word, strlen(word)*sizeof(char*));
         sortWord(sortedword);
+        //fprintf(stderr, "Je print la key : %s, la data : %s et la longueur du char %d  dans dict\n", sortedword, word, strlen(word));
         dictInsert(dict->d, sortedword, word);
+        //fprintf(stderr, "Je print la key : %s, la data : %s dans create \n", sortedword, dictSearch(dict->d, sortedword));
         tmp = llNext(tmp);
     }
     free(tmp);
@@ -69,6 +72,7 @@ void* makeCombinaisons(ScrabbleDict* sb, char* sortedletters, int lengthletters,
 {
     if(index == i)
     {
+        //fprintf(stderr,"Je print le mot : %s \n", output);
         return dictSearch(sb->d,(void*) output);
     }
     if(j >= lengthletters)
@@ -99,16 +103,20 @@ char* scrabbleFindLongestWord(ScrabbleDict* sd, const char* letters)
     char* sortedletters = calloc(lengthletters, sizeof(char));
     memmove(sortedletters, letters, lengthletters * sizeof(char));
     sortWord(sortedletters);
+    //fprintf(stderr, "Je print les lettres triées : %s\n", sortedletters);
 
     char* result = calloc(lengthletters, sizeof(char));
     for(int i = lengthletters ; i ; i--)
     {
+        //fprintf(stderr, "Je print i : %d \n",i);
         result = allCombinaisons(sd, sortedletters, lengthletters, i);
         if(result != NULL)
         {
+            //fprintf(stderr, "Je passe ici \n");
             break;
         }
     }
+    //fprintf(stderr,"Je print result: %s\n", result);
     free(sortedletters);
     return result;
 }

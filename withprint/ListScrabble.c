@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "LinkedList.h"
 #include "Scrabble.h"
@@ -19,6 +20,9 @@ static bool match(const char* letters, char* word)
         return false;
     
     int tmp;
+    /*char tab[26];
+    for(int i = 0; i < 26; i++)
+        tab[i] = 0;*/
 
     char* tab = calloc(26, sizeof(char));
 
@@ -38,6 +42,34 @@ static bool match(const char* letters, char* word)
     free(tab); 
     return true;
 }
+
+/*static bool match(const char* letters, char* word) {
+
+    size_t nbLetters = strlen(letters);
+    size_t lengthWord = strlen(word);
+
+    if (lengthWord > nbLetters)
+        return false;
+
+    bool mask[nbLetters];
+    for (size_t i = 0; i < nbLetters; i++)
+        mask[i] = false;
+
+    for (size_t i = 0; i < lengthWord; i++) {
+        size_t j = 0;
+
+        while (j < nbLetters && (mask[j] || letters[j] != word[i]))
+            j++;
+
+        if (j == nbLetters)
+          return false;
+
+        mask[j] = true;
+    }
+
+    return true;
+}*/
+
 
 ScrabbleDict* scrabbleCreateDict(List* words) {
     ScrabbleDict* sd = malloc(sizeof(ScrabbleDict));
@@ -69,5 +101,6 @@ char* scrabbleFindLongestWord(ScrabbleDict* dict, const char* letters) {
             }
         }
     }
+    //printf("Je print le result : %s \n", longestWord);
     return longestWord;
 }

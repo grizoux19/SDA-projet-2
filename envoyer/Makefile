@@ -1,6 +1,6 @@
 # Macros
 CC = gcc
-CFLAGS = -g -std=c99 --pedantic -Wall -Wextra -Wmissing-prototypes 
+CFLAGS = -std=c99 --pedantic -Wall -Wextra -Wmissing-prototypes
 
 ALL = sb_list sb_hash sb_trie sb_fast
 
@@ -11,8 +11,8 @@ ALL = sb_list sb_hash sb_trie sb_fast
 # Executables
 all: $(ALL)
 
-sb_hash: main.o LinkedList.o HashTable.o DictScrabble.o
 sb_list: main.o LinkedList.o ListScrabble.o
+sb_hash: main.o LinkedList.o HashTable.o DictScrabble.o
 sb_trie: main.o LinkedList.o Trie.o DictScrabble.o
 sb_fast: main.o LinkedList.o Trie.o TrieScrabble.o
 
@@ -30,4 +30,3 @@ run: $(ALL)
 	./sb_hash
 	./sb_trie
 	./sb_fast
-	

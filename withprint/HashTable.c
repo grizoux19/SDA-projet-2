@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 extern char* strdup(const char*);  // strdup not declared in C99
 
@@ -84,23 +85,28 @@ int dictContains(Dict* d, const char* key) {
 }
 
 void* dictSearch(Dict* d, const char* key) {
+    //fprintf(stderr, "Je print key : %s \n", key);
     Node* n = dictGet(d, key);
 
     if (n)
     {
+        //fprintf(stderr, "Je print data : %s \n", n->data);
         return n->data;
     }
     else
     {
+        //fprintf(stderr, "Je passe ici \n");
         return NULL;
     }
 }
 
 void dictInsert(Dict* d, const char* key, void* data) {
+    //fprintf(stderr, "Je print key : %s et je print data : %s \n", key, data);
     Node* n = dictGet(d, key);
 
     if (n)
     {
+        //fprintf(stderr, "Je passe ici \n");
         n->data = data;
     }
     else {
@@ -120,7 +126,7 @@ void dictInsert(Dict* d, const char* key, void* data) {
     char* datatmp;
     char* keytmp;
     Node* nexttmp;
-    if(alpha > 0.7) 
+    if(alpha > 0.7) //On re-hash
     {
         d->nbKeys = 0; 
         Node** arraytmp = calloc(d->size, sizeof(Node*));
@@ -128,10 +134,11 @@ void dictInsert(Dict* d, const char* key, void* data) {
         {
             arraytmp[i] = d->array[i];
         }
-        d->array = calloc(2*d->size, sizeof(Node*));
+        d->array = calloc(2*d->size, sizeof(Node*)); //On alloue de la mémoire en plus dans la structure
 
         int lenght = d->size;
         d->size = 2*d->size;
+        //fprintf(stderr, "Je print la taille du tab %d \n", d->size); 
 
         for(int i = 0; i < lenght; i++)
         {
@@ -142,10 +149,12 @@ void dictInsert(Dict* d, const char* key, void* data) {
                 keytmp = tmp->key;
                 datatmp = tmp->data;
                 nexttmp = tmp->next;
+                //fprintf(stderr, "Je print la key : %s et la data : %s iciiiiii\n", arraytmp[i]->key, arraytmp[i]->data);
 
                 dictInsert(d, keytmp, datatmp);
                 while(nexttmp != NULL)
                 {
+                    //fprintf(stderr, "Je passe ici \n");
                     datatmp = nexttmp->data;
                     keytmp = nexttmp->key;
                     dictInsert(d, keytmp, datatmp);

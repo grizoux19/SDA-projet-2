@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include <stdbool.h>
 
 #include "Dict.h"
@@ -14,8 +15,9 @@ struct Dict_t {
     size_t nbkeys;
 };
 
+static char* parcour(Cellule* noeud, char* letters, bool* tab, char* LonguestWord, int LonguestLenght);
 static void parcourFree(Cellule* noeud);
-static Cellule* dictSearchLonguestCellule(Cellule*, char*, size_t);
+static Cellule* dictSearchLonguestCellule(Cellule*, char*, int);
 
 Dict* dictCreateEmpty() {
     Dict* d = malloc(sizeof(Dict));
@@ -53,7 +55,7 @@ int dictContains(Dict* d, const char* key) {
     
     for(int i =0; i<nblettre; i++)
     {
-        lettre = key[i] - 97;
+        lettre = key[i] - 97; // donne le numéro de la case corespondant à la lettre
         noeud = noeud->fils[lettre];
         if(!noeud) 
             return 0;
@@ -71,7 +73,7 @@ void* dictSearch(Dict* d, const char* key) {
     
     for(int i =0; i<nblettre; i++)
     {
-        lettre = key[i] - 97;
+        lettre = key[i] - 97; // donne le numéro de la case corespondant à la lettre
         noeud = noeud->fils[lettre];
         if(noeud == NULL) 
             return NULL;
@@ -84,14 +86,13 @@ void* dictSearch(Dict* d, const char* key) {
 }
 
 void* dictSearchLongest(Dict* d, const char* letters) {
+    int nbletters= strlen(letters);
     
     Cellule* best = malloc(sizeof(Cellule));
-    Cellule* start = d->root;
+    Cellule* start = d->root;;
 
-    char input[strlen(letters)];
-    memmove(input, letters, strlen(letters)*sizeof(char));
-
-    best = dictSearchLonguestCellule(start, input, 0);
+    best = dictSearchLonguestCellule(start, letters, 0);
+    //fprintf(stderr,"%s\n", best->data);
 
     return best->data;
 }
@@ -123,7 +124,7 @@ void dictInsert(Dict* d, const char* key, void* data) {
 }
 
 
-static Cellule* dictSearchLonguestCellule(Cellule* n, char* letters, size_t longuestlength)
+static Cellule* dictSearchLonguestCellule(Cellule* n, char* letters, int longuestlength)//, int actlength)
 {
     Cellule* longuestword = NULL;
     if(n->data != NULL && strlen(n->data) > longuestlength)
@@ -136,7 +137,7 @@ static Cellule* dictSearchLonguestCellule(Cellule* n, char* letters, size_t long
         char* tmp = letters;
         char* next = letters;
 
-        while(*letters)
+        while(*letters != NULL)
         {
             if(*letters == i + 97 && n->fils[i] != NULL)
             {
@@ -144,9 +145,9 @@ static Cellule* dictSearchLonguestCellule(Cellule* n, char* letters, size_t long
                 char* lettersbis = malloc(strlen(tmp)* sizeof(char));
 
                 int j;
-                for(j = 0; *tmp;)
+                for(j = 0; *tmp != NULL;)
                 {
-                    if(*tmp != 1)
+                    if(tmp != 1)
                     {
                         lettersbis[j] = *tmp;
                         j++;
